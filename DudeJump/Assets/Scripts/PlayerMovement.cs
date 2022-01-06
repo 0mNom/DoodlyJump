@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField] private float sideSpeed;
     [SerializeField] private GameObject cam;
-    public GameObject highP;
+    public GameObject highP, bullet,muzzle;
     public UI ui;
 
     void Start()
@@ -43,7 +43,16 @@ public class PlayerMovement : MonoBehaviour
             this.transform.position = pos;
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase == TouchPhase.Began) Shoot();
     }
+
+
+    public void Shoot()
+    {
+        Instantiate(bullet,muzzle.transform);
+    }
+
 
 
     private void OnCollisionEnter2D(Collision2D collision)
