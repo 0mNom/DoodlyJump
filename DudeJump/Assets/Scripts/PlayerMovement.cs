@@ -10,10 +10,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject cam;
     public GameObject highP, bullet,muzzle;
     public UI ui;
+    public Sprite shoot, normal;
+    public SpriteRenderer player;
+
+    public AutoLock enem;
 
     void Start()
     {
-       
+        player.sprite = normal; 
         
     }
 
@@ -43,21 +47,25 @@ public class PlayerMovement : MonoBehaviour
             this.transform.position = pos;
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
-        Touch touch = Input.GetTouch(0);
+        
+        Touch touch = Input.GetTouch(0); //need a failsafe here
         if (touch.phase == TouchPhase.Began) Shoot();
     }
 
 
     public void Shoot()
     {
-        Instantiate(bullet,muzzle.transform);
+        StopCoroutine("shooting");
+        StartCoroutine("shooting");
+
+       
     }
 
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "DeathBox")
+        if (collision.gameObject.name == "DeathBox"|| collision.gameObject.tag == "enemy")
         {
             Debug.Log("YOU ARE DEAD");
             
@@ -69,12 +77,27 @@ public class PlayerMovement : MonoBehaviour
 
         if (collision.gameObject.name == "Walls")
         {
-
-            //if (this.transform.position.x > 4)
-           // {
                 this.transform.position = new Vector3(-this.transform.position.x, this.transform.position.y, this.transform.position.z);
-           // }
-
         }
+
+        if(collision.gameObject.tag == "END")
+        {
+            //you won 
+            //go back to menu 
+        }
+
+        
+    }
+
+    IEnumerator shooting()
+    {
+        GameObject go = Instantiate(bullet, muzzle.transform);
+       // go.GetComponent<Bullet>().go(enem.closestEnemy.transform.position.x, enem.closestEnemy.transform.position.y);
+        //Debug.Log(enem.closestEnemy.transform.position.x );
+      //  Debug.Log(enem.closestEnemy.transform.position.y );
+        player.sprite = shoot;
+        
+        yield return new WaitForSecondsRealtime(.2f);
+        player.sprite = normal; 
     }
 }

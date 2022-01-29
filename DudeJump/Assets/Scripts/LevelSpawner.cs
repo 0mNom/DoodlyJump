@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelSpawner : MonoBehaviour
 {
-    public GameObject platformP;
+    public GameObject platformP, enemy1, theEnd;
 
     [SerializeField] private int numberOfPlatforms = 200;
     [SerializeField] private float minX, maxX, minY, maxY;
@@ -18,9 +18,20 @@ public class LevelSpawner : MonoBehaviour
         {
             spawnPosition.y += Random.Range(minY, maxY);
             spawnPosition.x = Random.Range(minX, maxX);
-           
-            Instantiate(platformP, spawnPosition, Quaternion.identity);
+
+            int x = Random.Range(0, 10);
+            if (x == 1)
+            {
+                Instantiate(platformP, spawnPosition, Quaternion.identity);
+                spawnPosition.y += 1; 
+                Instantiate(enemy1, spawnPosition, Quaternion.identity);
+            }
+            else Instantiate(platformP, spawnPosition, Quaternion.identity);
         }
+
+        spawnPosition.y += 4;
+        spawnPosition.x = 0;
+        Instantiate(theEnd, spawnPosition, Quaternion.identity);
     }
 
     
